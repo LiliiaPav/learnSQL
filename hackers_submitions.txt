@@ -1,0 +1,38 @@
+select Submissions.submission_date, Submissions.hacker_id, Hackers.name, COUNT(Submissions.hacker_id) 
+from Submissions, Hackers
+where Submissions.submission_date=TO_DATE('20160301','YYYYMMDD') and Submissions.hacker_id=Hackers.hacker_id 
+group by Submissions.submission_date, Submissions.hacker_id, Hackers.name 
+order by COUNT(Submissions.hacker_id) DESC;
+
+select hacker_id from Submissions having COUNT(Submissions.submission_date)=15 group by hacker_id;
+
+
+select Submissions.submission_date, Submissions.hacker_id, COUNT(Submissions.hacker_id) 
+from Submissions
+where EXISTS (select hacker_id from Submissions where  having COUNT(submission_date)=15 group by hacker_id)
+group by Submissions.submission_date, Submissions.hacker_id 
+order by COUNT(Submissions.hacker_id) DESC;
+
+
+select submission_date, Submissions.hacker_id , COUNT(Submissions.hacker_id) as sub
+from Submissions   
+where Submissions.hacker_id IN (select hacker_id from Submissions having COUNT(submission_date)=15 group by hacker_id)
+group by Submissions.submission_date, Submissions.hacker_id 
+order by Submissions.submission_date, COUNT(Submissions.hacker_id) DESC;
+
+
+
+select submission_date, hacker_id, COUNT (hacker_id)
+from Submissions
+having COUNT(hacker_id)=2 or COUNT(hacker_id)=3 or COUNT(hacker_id)=4
+group by submission_date, hacker_id
+order by submission_date, COUNT(hacker_id) DESC;
+
+select hacker_id from Submissions having COUNT(submission_date)=15 group by hacker_id;
+
+
+select Submissions.submission_date, COUNT(Submissions.hacker_id), Submissions.hacker_id, Hackers.name
+from Submissions, Hackers
+where Submissions.hacker_id in (select Submissions.hacker_id from Submissions having COUNT(DISTINCT Submissions.submission_date)=15 GROUP BY Submissions.hacker_id) and (Submissions.hacker_id=Hackers.hacker_id)
+group by Submissions.submission_date, Submissions.hacker_id, Hackers.name
+order by Submissions.submission_date, Submissions.hacker_id;
